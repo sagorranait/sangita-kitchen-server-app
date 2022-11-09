@@ -34,6 +34,12 @@ const runServer = async () => {
       }
   });
 
+  app.post('/addService', async (req, res) => {
+      const order = req.body;
+      const result = await services.insertOne(order);
+      res.send(result);
+   });
+
   app.get('/services/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -47,6 +53,14 @@ const runServer = async () => {
       const result = await reviews.insertOne(order);
       res.send(result);
   });
+
+  app.get('/review/:serviceId', async (req, res) => {
+      const id = req.params.serviceId;
+      let query = { "service.sid": id };
+      const cursor = reviews.find(query);
+      const serviceReview = await cursor.toArray();
+      res.send(serviceReview);
+   });
 }
 
 runServer().catch(error => console.error(error));
