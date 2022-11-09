@@ -48,6 +48,18 @@ const runServer = async () => {
    });
 
    // Review Route
+   app.get('/review', async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+          query = {
+            "user_info.email": req.query.email
+          }
+      }
+      const cursor = reviews.find(query);
+      const userReviews = await cursor.toArray();
+      res.send(userReviews);
+  });
+
    app.post('/review', async (req, res) => {
       const order = req.body;
       const result = await reviews.insertOne(order);
