@@ -15,6 +15,26 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.SERVER_USER}:${process.env.SERVER_PASSWORD}@cluster0.b18cp.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+const runServer = async () => {
+   const services = client.db('sangitasKitchen').collection('services');
+   const reviews = client.db('sangitasKitchen').collection('reviews');
+
+   app.get('/services', async (req, res) => {
+      const limitSize = req.headers.limitsize;
+      const query = {}
+      const cursor = services.find(query);
+
+      if (limitSize) {
+         const servicesData = await cursor.limit(3).toArray();
+         return res.send(servicesData);
+      }else{
+         const servicesData = await cursor.toArray();
+         return res.send(servicesData);
+      }
+  });
+}
+
+runServer().catch(error => console.error(error));
 
 app.get('/', (req, res) => {
    res.send('Service Review Server Side.')
