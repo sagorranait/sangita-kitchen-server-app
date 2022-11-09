@@ -19,6 +19,7 @@ const runServer = async () => {
    const services = client.db('sangitasKitchen').collection('services');
    const reviews = client.db('sangitasKitchen').collection('reviews');
 
+   // Services Route
    app.get('/services', async (req, res) => {
       const limitSize = req.headers.limitsize;
       const query = {}
@@ -39,6 +40,13 @@ const runServer = async () => {
       const serviceData = await services.findOne(query);
       res.send(serviceData);
    });
+
+   // Review Route
+   app.post('/review', async (req, res) => {
+      const order = req.body;
+      const result = await reviews.insertOne(order);
+      res.send(result);
+  });
 }
 
 runServer().catch(error => console.error(error));
