@@ -32,6 +32,13 @@ const runServer = async () => {
          return res.send(servicesData);
       }
   });
+
+  app.get('/services/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const serviceData = await services.findOne(query);
+      res.send(serviceData);
+   });
 }
 
 runServer().catch(error => console.error(error));
