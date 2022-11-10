@@ -73,6 +73,13 @@ const runServer = async () => {
       const serviceReview = await cursor.toArray();
       res.send(serviceReview);
    });
+
+   app.delete('/review/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviews.deleteOne(query);
+      res.send(result);
+  });
 }
 
 runServer().catch(error => console.error(error));
